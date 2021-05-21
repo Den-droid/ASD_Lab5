@@ -2,10 +2,9 @@ package com.example;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Objects;
 
-public class HashTable<K, V> {
-    private ArrayList<HashNode<K, V>> buckets;
+public class HashTable<V> {
+    private ArrayList<HashNode<V>> buckets;
     private int numBuckets;
     private int currentSize;
     private final float loadFactor = 0.75F;
@@ -20,18 +19,23 @@ public class HashTable<K, V> {
         }
     }
 
-    public int hashCode(K key) {
-        return Objects.hash(key);
+    public int hashCode(String key) {
+        int cons = 150;
+        int hash_result = 0;
+        for (int i = 0; i != key.length(); ++i)
+            hash_result = (cons * hash_result + key.charAt(i)) % this.numBuckets;
+        hash_result = (hash_result * 2 + 1) % this.numBuckets;
+        return hash_result;
     }
 
     private int indexForBucket(int hash) {
         return hash % numBuckets;
     }
 
-    public ArrayList<HashNode<K, V>> getSorted() {
-        ArrayList<HashNode<K, V>> sorted = new ArrayList<>();
-        HashNode<K, V> hashNode = null;
-        for (HashNode<K, V> elem : this.buckets) {
+    public ArrayList<HashNode<V>> getSorted() {
+        ArrayList<HashNode<V>> sorted = new ArrayList<>();
+        HashNode<V> hashNode = null;
+        for (HashNode<V> elem : this.buckets) {
             if (elem != null) {
                 hashNode = elem;
                 while (hashNode != null) {
@@ -44,10 +48,10 @@ public class HashTable<K, V> {
         return sorted;
     }
 
-    public V getElement(K key) {
+    public V getElement(String key) {
         int hashCode = this.hashCode(key);
         int index = indexForBucket(hashCode);
-        HashNode<K, V> node = buckets.get(index);
+        HashNode<V> node = buckets.get(index);
         while (node != null) {
             if (node.getKey().equals(key)) {
                 return node.getValue();
@@ -57,11 +61,11 @@ public class HashTable<K, V> {
         return null;
     }
 
-    public V removeElement(K key) {
+    public V removeElement(String key) {
         int hashCode = this.hashCode(key);
         int index = indexForBucket(hashCode);
-        HashNode<K, V> node = buckets.get(index);
-        HashNode<K, V> prev = null;
+        HashNode<V> node = buckets.get(index);
+        HashNode<V> prev = null;
         while (node != null) {
             if (node.getKey().equals(key)) {
                 break;
@@ -86,11 +90,11 @@ public class HashTable<K, V> {
         return node.getValue();
     }
 
-    public void addElement(K key, V value) {
+    public void addElement(String key, V value) {
         int hashCode = this.hashCode(key);
         int index = indexForBucket(hashCode);
-        HashNode<K, V> node = new HashNode<>(key, value);
-        HashNode<K, V> find = this.buckets.get(index);
+        HashNode<V> node = new HashNode<>(key, value);
+        HashNode<V> find = this.buckets.get(index);
         if (find == null) {
             this.buckets.set(index, node);
         } else {
@@ -110,7 +114,7 @@ public class HashTable<K, V> {
         this.currentSize++;
 
         if ((1.0 * this.currentSize) / this.numBuckets >= this.loadFactor) {
-            ArrayList<HashNode<K, V>> temp = this.buckets;
+            ArrayList<HashNode<V>> temp = this.buckets;
             this.numBuckets *= 2;
             this.buckets = new ArrayList<>();
             this.currentSize = 0;
@@ -119,7 +123,7 @@ public class HashTable<K, V> {
                 this.buckets.add(null);
             }
 
-            for (HashNode<K, V> elem : temp) {
+            for (HashNode<V> elem : temp) {
                 while (elem != null) {
                     this.addElement(elem.getKey(), elem.getValue());
                     elem = elem.getNext();
