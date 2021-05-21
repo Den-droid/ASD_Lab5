@@ -20,11 +20,11 @@ public class HashTable<V> {
     }
 
     public int hashCode(String key) {
-        int cons = 150;
+        int cons = 156;
         int hash_result = 0;
-        for (int i = 0; i != key.length(); ++i)
+        for (int i = 0; i != key.length(); ++i) {
             hash_result = (cons * hash_result + key.charAt(i)) % this.numBuckets;
-        hash_result = (hash_result * 2 + 1) % this.numBuckets;
+        }
         return hash_result;
     }
 
@@ -34,7 +34,7 @@ public class HashTable<V> {
 
     public ArrayList<HashNode<V>> getSorted() {
         ArrayList<HashNode<V>> sorted = new ArrayList<>();
-        HashNode<V> hashNode = null;
+        HashNode<V> hashNode;
         for (HashNode<V> elem : this.buckets) {
             if (elem != null) {
                 hashNode = elem;
