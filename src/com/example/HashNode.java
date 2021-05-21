@@ -1,7 +1,5 @@
 package com.example;
 
-import java.util.Objects;
-
 public class HashNode<V>{
     private String key;
     private V value;
@@ -23,19 +21,6 @@ public class HashNode<V>{
     public V setValue(V value) {
         this.value = value;
         return this.value;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getKey());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        HashNode<?> hashNode = (HashNode<?>) o;
-        return getKey().equals(hashNode.getKey());
     }
 
     public HashNode<V> getNext(){

@@ -25,6 +25,7 @@ public class HashTable<V> {
         for (int i = 0; i != key.length(); ++i) {
             hash_result = (cons * hash_result + key.charAt(i)) % this.numBuckets;
         }
+        hash_result = (hash_result * 2 + 1) % this.numBuckets;
         return hash_result;
     }
 
